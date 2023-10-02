@@ -52,13 +52,13 @@ const detailSaleSchema = new Schema({
   salePrice: { type: Number, default: 0 },
   saleLiter: { type: Number, default: 0 },
   totalPrice: { type: Number, default: 0 },
+
   totalizer_liter: { type: Number, default: 0 },
   totalizer_amount: { type: Number, default: 0 },
 
-  devTotalizar_liter : {type: Number, default: 0},
-  devTotalizer_amount : {type: Number, default: 0},
-  
-  isError: { type: String, default: false },
+  devTotalizar_liter: { type: Number, default: 0 },
+
+  isError: { type: String, default: "0", enum: ["0","A", "R", "E"] },
   preset: { type: String, default: null },
   device: { type: String, required: true },
 

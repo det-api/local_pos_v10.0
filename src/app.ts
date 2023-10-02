@@ -42,7 +42,6 @@ client.on("message", async (topic, message) => {
   }
 
   if (data[2] == "Final") {
-    console.log(topic, message);
     detailSaleUpdateByDevice(data[3], message.toString());
   }
 

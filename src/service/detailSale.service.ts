@@ -349,8 +349,12 @@ export const detailSaleUpdateError = async (
 
 export const detailSaleUpdateByDevice = async (topic: string, message) => {
   try {
+    console.log("ekkkkkkkkkk");
     const regex = /[A-Z]/g;
     let data: any[] = message.split(regex);
+
+    console.log(data)
+
     // console.log("wk");
     // let [saleLiter, totalPrice] = deviceLiveData.get(data[0]);
     let saleLiter = deviceLiveData.get(data[0])?.[0];
@@ -390,6 +394,7 @@ export const detailSaleUpdateByDevice = async (topic: string, message) => {
         lastData[1].totalizer_liter + Number(saleLiter ? saleLiter : 0),
       totalizer_amount:
         lastData[1].totalizer_amount + Number(totalPrice ? totalPrice : 0),
+      devTotalizar_liter:data[4]
     };
 
     await detailSaleModel.findByIdAndUpdate(lastData[0]._id, updateBody);
@@ -512,6 +517,7 @@ export const detailSaleUpdateByDevice = async (topic: string, message) => {
     }
     // mqttEmitter("detpos/local_server", `${result?.nozzleNo}/D1S1`);
   } catch (e) {
+    console.log(e)
     throw new Error(e);
   }
 };
@@ -634,5 +640,3 @@ export const initialDetail = async (body) => {
     throw e;
   }
 };
-
-
