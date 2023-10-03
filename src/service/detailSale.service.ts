@@ -5,11 +5,6 @@ import { UserDocument } from "../model/user.model";
 import moment from "moment-timezone";
 import { mqttEmitter, previous } from "../utils/helper";
 import axios from "axios";
-import {
-  getCoustomer,
-  getCoustomerById,
-  updateCoustomer,
-} from "./coustomer.service";
 import { deviceLiveData } from "../connection/liveTimeData";
 import {
   addFuelBalance,
@@ -318,16 +313,16 @@ export const detailSaleUpdateError = async (
     let data = await detailSaleModel.findOne(query);
     if (!data) throw new Error("no data with that id");
 
-    // const lastData: any = await detailSaleModel
-    //   .find({ nozzleNo: data.nozzleNo })
-    //   .sort({ _id: -1, createAt: -1 })
-    //   .limit(2);
+    const lastData: any = await detailSaleModel
+      .find({ nozzleNo: data.nozzleNo })
+      .sort({ _id: -1, createAt: -1 })
+      .limit(2);
 
     body = {
       ...body,
       asyncAlready: "1",
-      // totalizer_liter: lastData[1].totalizer_liter + Number(body.saleLiter),
-      // totalizer_amount: lastData[1].totalizer_amount + Number(body.totalPrice),
+      totalizer_liter: lastData[1].totalizer_liter + Number(body.saleLiter),
+      totalizer_amount: lastData[1].totalizer_amount + Number(body.totalPrice),
       isError: true,
     };
 
@@ -349,11 +344,11 @@ export const detailSaleUpdateError = async (
 
 export const detailSaleUpdateByDevice = async (topic: string, message) => {
   try {
-    console.log("ekkkkkkkkkk");
+    // console.log("ekkkkkkkkkk");
     const regex = /[A-Z]/g;
     let data: any[] = message.split(regex);
 
-    console.log(data)
+    
 
     // console.log("wk");
     // let [saleLiter, totalPrice] = deviceLiveData.get(data[0]);
@@ -374,15 +369,6 @@ export const detailSaleUpdateByDevice = async (topic: string, message) => {
       return;
     }
 
-    // if (
-    //   saleLiter == 0 ||
-    //   (saleLiter == null && data[2] == 0) ||
-    //   data[2] == ""
-    // ) {
-    //   await detailSaleModel.findByIdAndDelete(lastData[0]?._id);
-    //   mqttEmitter("detpos/local_server", `${lastData[0]?.nozzleNo}/D1S1`);
-    //   return;
-    // }
 
     let updateBody: UpdateQuery<detailSaleDocument> = {
       nozzleNo: data[0],
@@ -394,7 +380,8 @@ export const detailSaleUpdateByDevice = async (topic: string, message) => {
         lastData[1].totalizer_liter + Number(saleLiter ? saleLiter : 0),
       totalizer_amount:
         lastData[1].totalizer_amount + Number(totalPrice ? totalPrice : 0),
-      devTotalizar_liter:data[4]
+      devTotalizar_liter:data[4],
+      isError: "A"
     };
 
     await detailSaleModel.findByIdAndUpdate(lastData[0]._id, updateBody);
@@ -517,7 +504,6 @@ export const detailSaleUpdateByDevice = async (topic: string, message) => {
     }
     // mqttEmitter("detpos/local_server", `${result?.nozzleNo}/D1S1`);
   } catch (e) {
-    console.log(e)
     throw new Error(e);
   }
 };
@@ -640,3 +626,5 @@ export const initialDetail = async (body) => {
     throw e;
   }
 };
+
+

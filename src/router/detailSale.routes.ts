@@ -1,7 +1,6 @@
 import {
   addDetailSaleHandler,
   deleteDetailSaleHandler,
-  detailSaleUpdateErrorHandler,
   getDetailSaleByDateHandler,
   getDetailSaleDatePagiHandler,
   getDetailSaleHandler,
@@ -70,12 +69,12 @@ detailSaleRoute.patch(
   updateDetailSaleHandler
 );
 
-detailSaleRoute.patch(
-  "/error",
-  validateToken,
-  managerValidator,
-  detailSaleUpdateErrorHandler
-);
+// detailSaleRoute.patch(
+//   "/error",
+//   validateToken,
+//   managerValidator,
+//   detailSaleUpdateErrorHandler
+// );
 
 detailSaleRoute.delete(
   "/",

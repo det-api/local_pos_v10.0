@@ -8,9 +8,9 @@ import {
   detailSalePaginate,
   detailSaleByDate,
   detailSaleByDateAndPagi,
-  detailSaleUpdateError,
   preSetDetailSale,
   initialDetail,
+  detailSaleUpdateError,
   // detailSaleByDate,
 } from "../service/detailSale.service";
 import {
@@ -99,7 +99,6 @@ export const preSetDetailSaleHandler = async (
   }
 };
 
-//import
 export const addDetailSaleHandler = async (
   req: Request,
   res: Response,
@@ -146,15 +145,6 @@ export const detailSaleUpdateErrorHandler = async (
     if(nozzleNo){
       throw ("you need nozzle no")
     }
-
-    let [saleLiter, totalPrice] = deviceLiveData.get(nozzleNo);
-
-    req.body = {
-      ...req.body,
-      saleLiter: saleLiter,
-      totalPrice: totalPrice,
-    };
-
     let result = await detailSaleUpdateError(req.query, req.body);
     fMsg(res, "updated DetailSale error data", result);
   } catch (e) {
