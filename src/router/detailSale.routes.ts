@@ -6,6 +6,7 @@ import {
   getDetailSaleHandler,
   initialDetailHandler,
   preSetDetailSaleHandler,
+  presetCancelHandler,
   updateDetailSaleHandler,
 } from "../controller/detailSale.controller";
 import { managerValidator } from "../middleware/managerValidator";
@@ -22,6 +23,7 @@ import {
   detailSaleErrorUpdateSchema,
   detailSaleSchema,
   detailSaleUpdateSchema,
+  deviceSchema,
 } from "../schema/schema";
 
 const detailSaleRoute = require("express").Router();
@@ -91,6 +93,13 @@ detailSaleRoute.post(
   roleValidator(["admin", "installer"]),
   hasAnyPermit(["add"]),
   initialDetailHandler
+);
+
+detailSaleRoute.post(
+  "/preset-cancel",
+  validateAll(deviceSchema),
+  validateToken,
+  presetCancelHandler
 );
 
 export default detailSaleRoute;

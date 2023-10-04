@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, query } from "express";
-import fMsg, { previous } from "../utils/helper";
+import fMsg, { mqttEmitter, previous } from "../utils/helper";
 import {
   getDetailSale,
   addDetailSale,
@@ -142,8 +142,8 @@ export const detailSaleUpdateErrorHandler = async (
   try {
     let nozzleNo = req.query.nozzleNo;
 
-    if(nozzleNo){
-      throw ("you need nozzle no")
+    if (nozzleNo) {
+      throw "you need nozzle no";
     }
     let result = await detailSaleUpdateError(req.query, req.body);
     fMsg(res, "updated DetailSale error data", result);
@@ -245,5 +245,21 @@ export const initialDetailHandler = async (
     fMsg(res, "added", result);
   } catch (e) {
     next(new Error(e));
+  }
+};
+
+export const presetCancelHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let nozzleNo = req.query.nozzleNo?.toString();
+    let depNo = req.query.depNo?.toString();
+
+    mqttEmitter(`detpos/local_server/presetcancel/${depNo}`, `${nozzleNo}`);
+    fMsg(res, "Preset data cancel");
+  } catch (e) {
+    next(e);
   }
 };
